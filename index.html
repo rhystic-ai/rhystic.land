@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RHYSTIC.AI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0a0a0a;
+            --acid-green: #39ff14;
+            --hot-pink: #ff073a;
+            --electric-cyan: #00fff7;
+            --acid-yellow: #ccff00;
+            --purple: #bf00ff;
+            --white: #ffffff;
+            --gray-dark: #1a1a1a;
+            --gray: #333333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Share Tech Mono', monospace;
+            background: var(--bg-dark);
+            color: var(--white);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* CRT Scanline Overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.15),
+                rgba(0, 0, 0, 0.15) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        /* CRT Flicker */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            pointer-events: none;
+            z-index: 9998;
+            animation: flicker 0.15s infinite;
+        }
+
+        @keyframes flicker {
+            0% { background: transparent; }
+            50% { background: rgba(57, 255, 20, 0.02); }
+            100% { background: transparent; }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--gray);
+        }
+
+        .logo {
+            font-family: 'VT323', monospace;
+            font-size: 32px;
+            color: var(--acid-green);
+            text-decoration: none;
+            text-shadow: 0 0 10px var(--acid-green), 0 0 20px var(--acid-green);
+            letter-spacing: 4px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--white);
+            text-decoration: none;
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a::before {
+            content: '[';
+            color: var(--acid-green);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            position: absolute;
+            left: -15px;
+        }
+
+        .nav-links a::after {
+            content: ']';
+            color: var(--acid-green);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            position: absolute;
+            right: -15px;
+        }
+
+        .nav-links a:hover {
+            color: var(--acid-green);
+            text-shadow: 0 0 10px var(--acid-green);
+        }
+
+        .nav-links a:hover::before,
+        .nav-links a:hover::after {
+            opacity: 1;
+        }
+
+        .cta-btn {
+            padding: 12px 30px;
+            border: 2px solid var(--hot-pink);
+            background: transparent;
+            color: var(--hot-pink);
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--hot-pink);
+            transition: left 0.3s ease;
+            z-index: -1;
+        }
+
+        .cta-btn:hover {
+            color: var(--bg-dark);
+        }
+
+        .cta-btn:hover::before {
+            left: 0;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            padding: 100px 20px;
+            background: 
+                radial-gradient(ellipse at 20% 80%, rgba(191, 0, 255, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(0, 255, 247, 0.1) 0%, transparent 50%),
+                var(--bg-dark);
+        }
+
+        .hero-content {
+            text-align: center;
+            z-index: 10;
+        }
+
+        .hero-title {
+            font-family: 'VT323', monospace;
+            font-size: clamp(60px, 15vw, 150px);
+            color: var(--white);
+            text-shadow: 
+                0 0 10px var(--acid-green),
+                0 0 20px var(--acid-green),
+                0 0 40px var(--acid-green),
+                0 0 80px var(--acid-green);
+            letter-spacing: 8px;
+            animation: glitch 2s infinite;
+            position: relative;
+        }
+
+        .hero-title::before,
+        .hero-title::after {
+            content: 'RHYSTIC.AI';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .hero-title::before {
+            animation: glitch-1 0.3s infinite;
+            color: var(--hot-pink);
+            z-index: -1;
+        }
+
+        .hero-title::after {
+            animation: glitch-2 0.3s infinite;
+            color: var(--electric-cyan);
+            z-index: -2;
+        }
+
+        @keyframes glitch {
+            0%, 90%, 100% { transform: translate(0); }
+            92% { transform: translate(-2px, 2px); }
+            94% { transform: translate(2px, -2px); }
+            96% { transform: translate(-2px, -2px); }
+            98% { transform: translate(2px, 2px); }
+        }
+
+        @keyframes glitch-1 {
+            0%, 100% { clip-path: inset(50% 0 30% 0); transform: translate(-3px, 0); }
+            25% { clip-path: inset(20% 0 60% 0); transform: translate(3px, 0); }
+            50% { clip-path: inset(70% 0 10% 0); transform: translate(-3px, 0); }
+            75% { clip-path: inset(40% 0 20% 0); transform: translate(3px, 0); }
+        }
+
+        @keyframes glitch-2 {
+            0%, 100% { clip-path: inset(30% 0 50% 0); transform: translate(3px, 0); }
+            25% { clip-path: inset(60% 0 20% 0); transform: translate(-3px, 0); }
+            50% { clip-path: inset(10% 0 70% 0); transform: translate(3px, 0); }
+            75% { clip-path: inset(20% 0 40% 0); transform: translate(-3px, 0); }
+        }
+
+        .hero-subtitle {
+            font-size: 20px;
+            color: var(--gray);
+            margin-top: 30px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+        }
+
+        .typing-text {
+            color: var(--electric-cyan);
+            border-right: 2px solid var(--electric-cyan);
+            padding-right: 5px;
+            animation: blink 0.7s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { border-color: var(--electric-cyan); }
+            51%, 100% { border-color: transparent; }
+        }
+
+        /* Floating Elements */
+        .floating-shapes {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .shape {
+            position: absolute;
+            border: 2px solid;
+            opacity: 0.3;
+            animation: float 10s infinite ease-in-out;
+        }
+
+        .shape-1 {
+            width: 80px;
+            height: 50px;
+            border-color: var(--acid-green);
+            top: 15%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .shape-2 {
+            width: 60px;
+            height: 60px;
+            border-color: var(--hot-pink);
+            top: 70%;
+            right: 15%;
+            animation-delay: -2s;
+        }
+
+        .shape-3 {
+            width: 100px;
+            height: 40px;
+            border-color: var(--electric-cyan);
+            bottom: 20%;
+            left: 20%;
+            animation-delay: -4s;
+        }
+
+        .shape-4 {
+            width: 40px;
+            height: 80px;
+            border-color: var(--acid-yellow);
+            top: 30%;
+            right: 25%;
+            animation-delay: -6s;
+        }
+
+        .shape-5 {
+            width: 50px;
+            height: 50px;
+            border-color: var(--purple);
+            top: 50%;
+            left: 5%;
+            animation-delay: -8s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            33% { transform: translateY(-20px) rotate(5deg); }
+            66% { transform: translateY(10px) rotate(-5deg); }
+        }
+
+        /* Cassette Graphic */
+        .cassette {
+            width: 200px;
+            height: 120px;
+            background: var(--gray-dark);
+            border: 3px solid var(--gray);
+            border-radius: 10px;
+            position: absolute;
+            top: 20%;
+            right: 10%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            padding: 15px;
+            animation: pulse-glow 3s infinite;
+        }
+
+        .cassette::before {
+            content: 'C-90';
+            position: absolute;
+            bottom: 10px;
+            font-family: 'VT323', monospace;
+            font-size: 14px;
+            color: var(--gray);
+        }
+
+        .cassette-hole {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--bg-dark);
+            border: 3px solid var(--gray);
+            position: relative;
+        }
+
+        .cassette-hole::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--acid-green);
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 10px rgba(57, 255, 20, 0.3); }
+            50% { box-shadow: 0 0 30px rgba(57, 255, 20, 0.6); }
+        }
+
+        /* Scroll Indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .scroll-indicator span {
+            font-size: 12px;
+            color: var(--gray);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .scroll-arrow {
+            width: 20px;
+            height: 20px;
+            border-right: 2px solid var(--acid-green);
+            border-bottom: 2px solid var(--acid-green);
+            transform: rotate(45deg);
+            animation: scroll-bounce 1.5s infinite;
+        }
+
+        @keyframes scroll-bounce {
+            0%, 100% { transform: rotate(45deg) translateY(0); opacity: 1; }
+            50% { transform: rotate(45deg) translateY(10px); opacity: 0.5; }
+        }
+
+        /* Sections */
+        section {
+            padding: 120px 50px;
+            position: relative;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-family: 'VT323', monospace;
+            font-size: 48px;
+            color: var(--white);
+            text-align: center;
+            margin-bottom: 60px;
+            position: relative;
+        }
+
+        .section-title::before {
+            content: '// ';
+            color: var(--acid-green);
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--acid-green), transparent);
+        }
+
+        /* Features Section */
+        .features {
+            background: 
+                radial-gradient(ellipse at 50% 0%, rgba(57, 255, 20, 0.05) 0%, transparent 50%),
+                var(--bg-dark);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            background: var(--gray-dark);
+            border: 2px solid var(--gray);
+            padding: 40px 30px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--acid-green), var(--purple));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 0;
+        }
+
+        .feature-card:hover {
+            border-color: var(--acid-green);
+            box-shadow: 0 0 30px rgba(57, 255, 20, 0.3);
+            transform: translateY(-5px);
+        }
+
+        .feature-card:hover::before {
+            opacity: 0.1;
+        }
+
+        .feature-card > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .feature-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .feature-title {
+            font-family: 'VT323', monospace;
+            font-size: 28px;
+            color: var(--white);
+            margin-bottom: 15px;
+        }
+
+        .feature-desc {
+            color: var(--gray);
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        /* About Section */
+        .about {
+            background: 
+                radial-gradient(ellipse at 80% 50%, rgba(255, 7, 58, 0.1) 0%, transparent 50%),
+                var(--bg-dark);
+        }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .about-text p {
+            color: var(--gray);
+            font-size: 16px;
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+
+        .about-text .highlight {
+            color: var(--acid-green);
+        }
+
+        .about-visual {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .terminal {
+            width: 100%;
+            max-width: 400px;
+            background: var(--gray-dark);
+            border: 2px solid var(--gray);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .terminal-header {
+            background: var(--gray);
+            padding: 10px 15px;
+            display: flex;
+            gap: 8px;
+        }
+
+        .terminal-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .terminal-dot.red { background: var(--hot-pink); }
+        .terminal-dot.yellow { background: var(--acid-yellow); }
+        .terminal-dot.green { background: var(--acid-green); }
+
+        .terminal-body {
+            padding: 20px;
+            font-family: 'VT323', monospace;
+            font-size: 16px;
+        }
+
+        .terminal-line {
+            margin-bottom: 10px;
+        }
+
+        .terminal-prompt {
+            color: var(--acid-green);
+        }
+
+        .terminal-command {
+            color: var(--white);
+        }
+
+        .terminal-output {
+            color: var(--gray);
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 18px;
+            background: var(--acid-green);
+            animation: blink 0.7s infinite;
+        }
+
+        /* Contact Section */
+        .contact {
+            background: 
+                radial-gradient(ellipse at 20% 50%, rgba(0, 255, 247, 0.1) 0%, transparent 50%),
+                var(--bg-dark);
+            text-align: center;
+        }
+
+        .contact-cta {
+            font-family: 'VT323', monospace;
+            font-size: clamp(24px, 5vw, 36px);
+            color: var(--white);
+            margin-bottom: 30px;
+        }
+
+        .contact-cta .highlight {
+            color: var(--electric-cyan);
+            text-shadow: 0 0 20px var(--electric-cyan);
+        }
+
+        .email-link {
+            display: inline-block;
+            font-size: 24px;
+            color: var(--acid-green);
+            text-decoration: none;
+            border: 2px solid var(--acid-green);
+            padding: 20px 50px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .email-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--acid-green);
+            transition: left 0.3s ease;
+            z-index: -1;
+        }
+
+        .email-link:hover {
+            color: var(--bg-dark);
+        }
+
+        .email-link:hover::before {
+            left: 0;
+        }
+
+        /* Footer */
+        footer {
+            padding: 40px 50px;
+            background: var(--gray-dark);
+            border-top: 1px solid var(--gray);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-logo {
+            font-family: 'VT323', monospace;
+            font-size: 24px;
+            color: var(--gray);
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .footer-links a {
+            color: var(--gray);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--acid-green);
+        }
+
+        /* Mobile Menu */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            padding: 10px;
+        }
+
+        .menu-toggle span {
+            width: 25px;
+            height: 2px;
+            background: var(--white);
+            transition: all 0.3s ease;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .about-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .cassette {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                padding: 20px;
+            }
+
+            .menu-toggle {
+                display: flex;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                background: rgba(10, 10, 10, 0.98);
+                flex-direction: column;
+                padding: 30px;
+                gap: 20px;
+                transform: translateY(-100%);
+                opacity: 0;
+                transition: all 0.3s ease;
+            }
+
+            .nav-links.active {
+                transform: translateY(0);
+                opacity: 1;
+            }
+
+            section {
+                padding: 80px 20px;
+            }
+
+            .hero-title {
+                letter-spacing: 4px;
+            }
+
+            footer {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <a href="#" class="logo">RHYSTIC</a>
+        <ul class="nav-links">
+            <li><a href="#features">Features</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+        <button class="cta-btn">Get Started</button>
+        <div class="menu-toggle" onclick="toggleMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="floating-shapes">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+            <div class="shape shape-4"></div>
+            <div class="shape shape-5"></div>
+        </div>
+        
+        <div class="cassette">
+            <div class="cassette-hole"></div>
+            <div class="cassette-hole"></div>
+        </div>
+
+        <div class="hero-content">
+            <h1 class="hero-title">RHYSTIC.AI</h1>
+            <p class="hero-subtitle">
+                <span class="typing-text" id="typing"></span>
+            </p>
+        </div>
+
+        <div class="scroll-indicator">
+            <span>Scroll</span>
+            <div class="scroll-arrow"></div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <h2 class="section-title">Capabilities</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <span class="feature-icon">◈</span>
+                    <h3 class="feature-title">Neural Networks</h3>
+                    <p class="feature-desc">Advanced deep learning architectures designed for next-generation automation and decision systems.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">◇</span>
+                    <h3 class="feature-title">Predictive Analytics</h3>
+                    <p class="feature-desc">Real-time data processing and pattern recognition for strategic foresight.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">△</span>
+                    <h3 class="feature-title">Smart Integration</h3>
+                    <p class="feature-desc">Seamless API connections with legacy systems and modern infrastructure.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">○</span>
+                    <h3 class="feature-title">Computer Vision</h3>
+                    <p class="feature-desc">State-of-the-art visual recognition for autonomous systems and analytics.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">□</span>
+                    <h3 class="feature-title">NLP Engine</h3>
+                    <p class="feature-desc">Natural language processing for human-machine communication at scale.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">✦</span>
+                    <h3 class="feature-title">Edge Computing</h3>
+                    <p class="feature-desc">Distributed AI processing for low-latency applications at the network edge.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about" id="about">
+        <div class="container">
+            <h2 class="section-title">Mission</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>At <span class="highlight">RHYSTIC.AI</span>, we're building the intelligence infrastructure of tomorrow.</p>
+                    <p>Our team of researchers and engineers work at the intersection of machine learning, systems design, and cognitive computing. We don't just predict the future—we architect it.</p>
+                    <p>From enterprise automation to autonomous systems, we deliver AI solutions that are robust, scalable, and profoundly capable.</p>
+                </div>
+                <div class="about-visual">
+                    <div class="terminal">
+                        <div class="terminal-header">
+                            <div class="terminal-dot red"></div>
+                            <div class="terminal-dot yellow"></div>
+                            <div class="terminal-dot green"></div>
+                        </div>
+                        <div class="terminal-body">
+                            <div class="terminal-line">
+                                <span class="terminal-prompt">root@rhystic:~$</span>
+                                <span class="terminal-command">./init_ai_protocol</span>
+                            </div>
+                            <div class="terminal-line">
+                                <span class="terminal-output">[OK] Loading neural cores...</span>
+                            </div>
+                            <div class="terminal-line">
+                                <span class="terminal-output">[OK] Initializing learning modules...</span>
+                            </div>
+                            <div class="terminal-line">
+                                <span class="terminal-output">[OK] System ready.<span class="cursor"></span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact" id="contact">
+        <div class="container">
+            <h2 class="section-title">Connect</h2>
+            <p class="contact-cta">Ready to <span class="highlight">evolve</span> your infrastructure?</p>
+            <a href="mailto:hello@rhystic.ai" class="email-link">hello@rhystic.ai</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-logo">© 2024 RHYSTIC.AI</div>
+        <div class="footer-links">
+            <a href="#features">Features</a>
+            <a href="#about">About</a>
+            <a href="#contact">Contact</a>
+            <a href="#">Privacy</a>
+        </div>
+    </footer>
+
+    <script>
+        // Typing Effect
+        const phrases = [
+            'Future Intelligence Systems',
+            'Neural Architecture Design',
+            'Autonomous Solutions',
+            'Next-Gen AI Infrastructure'
+        ];
+        
+        let phraseIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        const typingElement = document.getElementById('typing');
+        
+        function type() {
+            const currentPhrase = phrases[phraseIndex];
+            
+            if (isDeleting) {
+                typingElement.textContent = currentPhrase.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                typingElement.textContent = currentPhrase.substring(0, charIndex + 1);
+                charIndex++;
+            }
+            
+            let typeSpeed = isDeleting ? 50 : 100;
+            
+            if (!isDeleting && charIndex === currentPhrase.length) {
+                typeSpeed = 2000;
+                isDeleting = true;
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                phraseIndex = (phraseIndex + 1) % phrases.length;
+                typeSpeed = 500;
+            }
+            
+            setTimeout(type, typeSpeed);
+        }
+        
+        type();
+
+        // Mobile Menu Toggle
+        function toggleMenu() {
+            document.querySelector('.nav-links').classList.toggle('active');
+        }
+
+        // Smooth Scroll for Navigation Links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+                // Close mobile menu if open
+                document.querySelector('.nav-links').classList.remove('active');
+            });
+        });
+
+        // Scroll Animation
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.feature-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(card);
+        });
+    </script>
+</body>
+</html>
