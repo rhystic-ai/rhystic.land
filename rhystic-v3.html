@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RHYSTIC.AI</title>
+
+  <!--
+    ╔══════════════════════════════════════════════════════════════╗
+    ║  FONT: KH Interference by Kurppa Hosk Type                  ║
+    ║  Purchase at: https://khtype.com/typeface/kh-interference/  ║
+    ║  Add your licensed font files and uncomment below:          ║
+    ╚══════════════════════════════════════════════════════════════╝
+
+  @font-face {
+    font-family: 'KH Interference';
+    src: url('fonts/KHInterference-Light.woff2') format('woff2');
+    font-weight: 300;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'KH Interference';
+    src: url('fonts/KHInterference-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'KH Interference';
+    src: url('fonts/KHInterference-Bold.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+  }
+  -->
+
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Space+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      /* Marathon palette */
+      --black:   #080806;
+      --bg:      #0c0c0a;
+      --panel:   #111110;
+      --border:  rgba(242,240,235,0.1);
+      --white:   #f2f0eb;
+      --dim:     rgba(242,240,235,0.45);
+      --orange:  #ff4500;
+      --orange2: #ff6b1a;
+      --cyan:    #00ddc0;
+      --green:   #9fe030;
+
+      /* KH Interference, falling back to Space Mono for similar receipt/monospace feel */
+      --font-display: 'KH Interference', 'Space Mono', 'Courier New', monospace;
+      --font-body:    'Space Grotesk', system-ui, sans-serif;
+      --font-mono:    'KH Interference', 'Space Mono', monospace;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--white);
+      overflow-x: hidden;
+    }
+
+    /* Scanlines */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 9000; pointer-events: none;
+      background: repeating-linear-gradient(
+        0deg, transparent, transparent 3px,
+        rgba(0,0,0,0.06) 3px, rgba(0,0,0,0.06) 4px
+      );
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 999;
+      display: flex; align-items: stretch;
+      height: 52px;
+      background: var(--black);
+      border-bottom: 1px solid var(--orange);
+    }
+
+    .nav-logo {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: var(--white);
+      text-decoration: none;
+      padding: 0 2rem;
+      display: flex; align-items: center;
+      border-right: 1px solid var(--border);
+    }
+    .nav-logo em { color: var(--orange); font-style: normal; }
+
+    .nav-center {
+      flex: 1;
+      display: flex; align-items: center;
+      padding: 0 2rem;
+    }
+    .nav-status {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      color: var(--dim);
+      display: flex; align-items: center; gap: 1rem;
+    }
+    .status-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--cyan);
+      animation: pulse 2s ease-in-out infinite;
+      display: inline-block;
+    }
+    @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+
+    .nav-links {
+      display: flex; align-items: stretch;
+      border-left: 1px solid var(--border);
+    }
+    .nav-links a {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--dim);
+      text-decoration: none;
+      padding: 0 1.4rem;
+      display: flex; align-items: center;
+      border-right: 1px solid var(--border);
+      transition: color 0.2s, background 0.2s;
+    }
+    .nav-links a:hover { color: var(--white); background: rgba(255,69,0,0.07); }
+    .nav-cta {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--black) !important;
+      background: var(--orange);
+      padding: 0 1.8rem;
+      display: flex; align-items: center;
+      text-decoration: none;
+      font-weight: 700;
+      transition: background 0.2s;
+    }
+    .nav-cta:hover { background: var(--orange2); }
+
+    /* ─── HERO ─── */
+    .hero {
+      min-height: 100vh;
+      padding-top: 52px;
+      display: grid;
+      grid-template-rows: 1fr auto;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Grid overlay */
+    .hero::after {
+      content: '';
+      position: absolute; inset: 0; pointer-events: none; z-index: 0;
+      background-image:
+        linear-gradient(rgba(242,240,235,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(242,240,235,0.025) 1px, transparent 1px);
+      background-size: 80px 80px;
+    }
+
+    /* Radial glow */
+    .hero-glow {
+      position: absolute;
+      width: 700px; height: 700px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,69,0,0.08) 0%, transparent 70%);
+      top: 10%; left: 50%; transform: translateX(-50%);
+      pointer-events: none; z-index: 0;
+    }
+
+    .hero-content {
+      position: relative; z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 6rem 2rem 3rem;
+    }
+
+    .hero-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 2.5rem;
+      display: flex; align-items: center; gap: 0.8rem;
+      opacity: 0; animation: fadeUp 0.6s ease forwards 0.1s;
+    }
+    .hero-eyebrow::before, .hero-eyebrow::after {
+      content: '';
+      display: block;
+      width: 30px; height: 1px;
+      background: var(--cyan);
+      opacity: 0.5;
+    }
+
+    .hero-wordmark {
+      font-family: var(--font-display);
+      font-size: clamp(5rem, 14vw, 13rem);
+      font-weight: 700;
+      line-height: 0.9;
+      letter-spacing: -0.02em;
+      color: var(--white);
+      opacity: 0; animation: fadeUp 0.7s ease forwards 0.2s;
+      margin-bottom: 0.08em;
+    }
+    .hero-wordmark .highlight { color: var(--orange); }
+
+    .hero-domain {
+      font-family: var(--font-mono);
+      font-size: clamp(0.8rem, 2vw, 1.1rem);
+      letter-spacing: 0.5em;
+      color: var(--dim);
+      margin-bottom: 3rem;
+      opacity: 0; animation: fadeUp 0.7s ease forwards 0.3s;
+    }
+
+    .hero-rule {
+      width: 1px; height: 60px;
+      background: linear-gradient(to bottom, var(--orange), transparent);
+      margin: 0 auto 3rem;
+      opacity: 0; animation: fadeIn 0.8s ease forwards 0.4s;
+    }
+
+    .hero-desc {
+      font-size: clamp(1rem, 1.6vw, 1.2rem);
+      line-height: 1.7;
+      color: var(--dim);
+      max-width: 520px;
+      margin-bottom: 3.5rem;
+      opacity: 0; animation: fadeUp 0.7s ease forwards 0.5s;
+    }
+
+    .hero-btns {
+      display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;
+      opacity: 0; animation: fadeUp 0.7s ease forwards 0.65s;
+    }
+
+    /* Buttons */
+    .btn-a {
+      font-family: var(--font-mono);
+      font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+      padding: 0.85rem 2rem;
+      background: var(--orange); color: var(--black);
+      text-decoration: none; font-weight: 700;
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .btn-a::after { content: '→'; transition: transform 0.2s; }
+    .btn-a:hover { background: var(--orange2); transform: translateY(-2px); }
+    .btn-a:hover::after { transform: translateX(3px); }
+
+    .btn-b {
+      font-family: var(--font-mono);
+      font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+      padding: 0.85rem 2rem;
+      background: transparent; color: var(--white);
+      text-decoration: none;
+      border: 1px solid rgba(242,240,235,0.25);
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      transition: border-color 0.2s, color 0.2s, transform 0.2s;
+    }
+    .btn-b:hover { border-color: var(--cyan); color: var(--cyan); transform: translateY(-2px); }
+
+    /* Ticker */
+    .hero-ticker {
+      position: relative; z-index: 1;
+      border-top: 1px solid var(--border);
+      padding: 0.65rem 0;
+      overflow: hidden;
+    }
+    .ticker-track {
+      display: inline-flex; gap: 3rem;
+      animation: ticker 22s linear infinite;
+      white-space: nowrap;
+    }
+    .ticker-item {
+      font-family: var(--font-mono);
+      font-size: 0.58rem; letter-spacing: 0.18em; text-transform: uppercase;
+      color: rgba(242,240,235,0.25);
+    }
+    .ticker-item b { color: var(--orange); font-weight: 400; margin-right: 0.4rem; }
+    @keyframes ticker { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+    /* ─── DIVIDER ─── */
+    .section-divider {
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--border), transparent);
+    }
+
+    /* ─── WHAT WE DO ─── */
+    .what {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 8rem 3rem;
+    }
+
+    .section-label {
+      font-family: var(--font-mono);
+      font-size: 0.6rem; letter-spacing: 0.35em; text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 0.8rem;
+    }
+
+    .section-heading {
+      font-family: var(--font-display);
+      font-size: clamp(2.2rem, 5vw, 4rem);
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      line-height: 1;
+      color: var(--white);
+      margin-bottom: 5rem;
+    }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: var(--border);
+    }
+
+    .service-card {
+      background: var(--panel);
+      padding: 3rem 2.5rem;
+      position: relative;
+      overflow: hidden;
+      transition: background 0.3s;
+    }
+    .service-card:hover { background: #161614; }
+
+    .service-card-accent {
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 2px;
+      transform: scaleX(0); transform-origin: left;
+      transition: transform 0.4s ease;
+    }
+    .service-card:hover .service-card-accent { transform: scaleX(1); }
+    .accent-orange { background: var(--orange); }
+    .accent-cyan   { background: var(--cyan); }
+    .accent-green  { background: var(--green); }
+
+    .service-num {
+      font-family: var(--font-mono);
+      font-size: 0.55rem; letter-spacing: 0.25em;
+      color: rgba(242,240,235,0.2);
+      margin-bottom: 2rem;
+    }
+
+    .service-title {
+      font-family: var(--font-display);
+      font-size: 1.5rem; font-weight: 700;
+      letter-spacing: -0.01em;
+      color: var(--white);
+      margin-bottom: 1rem;
+    }
+
+    .service-text {
+      font-size: 0.95rem;
+      color: var(--dim);
+      line-height: 1.7;
+    }
+
+    .service-corner {
+      position: absolute;
+      bottom: 2rem; right: 2rem;
+      font-size: 1.1rem;
+      color: rgba(242,240,235,0.1);
+      transition: color 0.3s, transform 0.3s;
+    }
+    .service-card:hover .service-corner { color: var(--orange); transform: translate(3px, -3px); }
+
+    /* wide card spans both columns */
+    .service-card-wide {
+      grid-column: span 2;
+    }
+
+    /* ─── STUDY ─── */
+    .study-section {
+      background: var(--black);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .study-grid {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 580px;
+    }
+
+    .study-left {
+      padding: 6rem 5rem 6rem 3rem;
+      border-right: 1px solid var(--border);
+      display: flex; flex-direction: column; justify-content: center;
+    }
+
+    .study-pill {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--black); background: var(--green);
+      padding: 0.3rem 0.75rem; font-weight: 700;
+      margin-bottom: 2rem;
+    }
+    .study-pill::before {
+      content:''; width:5px; height:5px; border-radius:50%; background:var(--black);
+    }
+
+    .study-name {
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 6vw, 5.5rem);
+      font-weight: 700; letter-spacing: -0.03em; line-height: 0.92;
+      margin-bottom: 1.5rem;
+    }
+    .study-name .s1 { display:block; color: var(--white); }
+    .study-name .s2 { display:block; color: var(--orange); }
+
+    .study-tagline {
+      font-size: 1rem; color: var(--dim); line-height: 1.7;
+      max-width: 420px; margin-bottom: 2.5rem;
+    }
+
+    .study-features {
+      list-style: none;
+      display: flex; flex-direction: column; gap: 0.55rem;
+      margin-bottom: 3rem;
+    }
+    .study-features li {
+      font-family: var(--font-mono);
+      font-size: 0.72rem; letter-spacing: 0.06em;
+      color: rgba(242,240,235,0.6);
+      display: flex; align-items: flex-start; gap: 0.7rem;
+    }
+    .study-features li::before { content: '▸'; color: var(--cyan); flex-shrink:0; }
+
+    /* Terminal panel */
+    .study-right {
+      padding: 4rem 3rem;
+      display: flex; flex-direction: column; justify-content: center;
+      background: #090907;
+      position: relative;
+    }
+    .study-right::before {
+      content:'';
+      position:absolute; inset:0; pointer-events:none;
+      background: radial-gradient(ellipse 90% 70% at 50% 30%, rgba(0,221,192,0.04), transparent);
+    }
+
+    .terminal {
+      border: 1px solid rgba(0,221,192,0.25);
+      border-top: 2px solid var(--cyan);
+      background: #06060a;
+      position: relative; z-index: 1;
+    }
+
+    .t-bar {
+      display: flex; align-items: center; gap: 0.5rem;
+      padding: 0.65rem 1rem;
+      border-bottom: 1px solid rgba(0,221,192,0.12);
+      background: rgba(0,221,192,0.04);
+    }
+    .t-dot { width:8px; height:8px; border-radius:50%; }
+    .t-d1 { background: var(--orange); }
+    .t-d2 { background: #ffde45; }
+    .t-d3 { background: var(--green); }
+    .t-label {
+      font-family: var(--font-mono);
+      font-size: 0.55rem; letter-spacing: 0.2em; color: rgba(0,221,192,0.5);
+      margin-left: auto;
+    }
+
+    .t-body { padding: 1.5rem 1.2rem; }
+    .t-row {
+      font-family: var(--font-mono);
+      font-size: 0.7rem; line-height: 2;
+    }
+    .t-row .p { color: var(--cyan); }
+    .t-row .c { color: var(--white); }
+    .t-row .o { color: var(--green); }
+    .t-row .d { color: rgba(242,240,235,0.25); }
+    .t-row .e { color: var(--orange); }
+
+    .t-cursor {
+      display: inline-block; width: 7px; height: 0.9em;
+      background: var(--cyan); vertical-align: text-bottom;
+      animation: blink 0.85s step-end infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+    .t-footer {
+      border-top: 1px solid rgba(0,221,192,0.12);
+      padding: 1rem 1.2rem;
+    }
+    .t-access {
+      font-family: var(--font-mono);
+      font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--cyan);
+      text-decoration: none;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.75rem 1rem;
+      border: 1px solid rgba(0,221,192,0.3);
+      transition: background 0.2s, color 0.2s;
+    }
+    .t-access:hover { background: var(--cyan); color: var(--black); }
+    .t-access span { opacity: 0.45; font-size: 0.55rem; }
+
+    /* ─── APPROACH ─── */
+    .approach {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 8rem 3rem;
+    }
+
+    .approach-steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      margin-top: 5rem;
+    }
+
+    .approach-step {
+      background: var(--panel);
+      padding: 3rem 2.5rem;
+      position: relative;
+    }
+
+    .step-index {
+      font-family: var(--font-display);
+      font-size: 4rem; font-weight: 700;
+      color: rgba(255,69,0,0.1);
+      line-height: 1;
+      margin-bottom: 1.5rem;
+    }
+
+    .step-tag {
+      position: absolute;
+      top: 2.5rem; right: 2.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.5rem; letter-spacing: 0.2em;
+      padding: 0.2rem 0.5rem;
+    }
+    .tag-orange { color: var(--orange); border: 1px solid rgba(255,69,0,0.3); }
+    .tag-cyan   { color: var(--cyan);   border: 1px solid rgba(0,221,192,0.3); }
+    .tag-green  { color: var(--green);  border: 1px solid rgba(159,224,48,0.3); }
+
+    .step-title {
+      font-family: var(--font-display);
+      font-size: 1.3rem; font-weight: 700;
+      letter-spacing: -0.01em;
+      color: var(--white);
+      margin-bottom: 0.75rem;
+    }
+
+    .step-text {
+      font-size: 0.9rem; color: var(--dim); line-height: 1.65;
+    }
+
+    /* ─── CTA ─── */
+    .cta {
+      background: var(--orange);
+    }
+    .cta-inner {
+      max-width: 1100px; margin: 0 auto;
+      padding: 5rem 3rem;
+      display: flex; align-items: center; justify-content: space-between; gap: 3rem; flex-wrap: wrap;
+    }
+    .cta-label {
+      font-family: var(--font-mono);
+      font-size: 0.6rem; letter-spacing: 0.3em;
+      color: rgba(8,8,6,0.55); margin-bottom: 0.6rem;
+    }
+    .cta-heading {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      font-weight: 700; letter-spacing: -0.025em;
+      line-height: 1; color: var(--black);
+    }
+    .cta-btns { display: flex; gap: 1rem; flex-wrap: wrap; flex-shrink: 0; }
+
+    .btn-dark {
+      font-family: var(--font-mono);
+      font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+      padding: 0.85rem 2rem;
+      background: var(--black); color: var(--white);
+      text-decoration: none;
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      transition: background 0.2s;
+    }
+    .btn-dark:hover { background: #1a1a18; }
+
+    .btn-outline-dark {
+      font-family: var(--font-mono);
+      font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+      padding: 0.85rem 2rem;
+      background: transparent; color: var(--black);
+      border: 1px solid rgba(8,8,6,0.35);
+      text-decoration: none;
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      transition: background 0.2s;
+    }
+    .btn-outline-dark:hover { background: rgba(8,8,6,0.08); }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: var(--black);
+      border-top: 1px solid var(--border);
+    }
+    .footer-inner {
+      max-width: 1100px; margin: 0 auto;
+      padding: 2.5rem 3rem;
+      display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
+    }
+    .footer-logo {
+      font-family: var(--font-display);
+      font-size: 0.95rem; font-weight: 700; letter-spacing: 0.08em;
+      color: var(--white); text-decoration: none;
+    }
+    .footer-logo em { color: var(--orange); font-style: normal; }
+
+    .footer-links { display: flex; gap: 2rem; }
+    .footer-links a {
+      font-family: var(--font-mono);
+      font-size: 0.58rem; letter-spacing: 0.18em; text-transform: uppercase;
+      color: rgba(242,240,235,0.28); text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--white); }
+
+    .footer-copy {
+      font-family: var(--font-mono);
+      font-size: 0.55rem; letter-spacing: 0.12em;
+      color: rgba(242,240,235,0.18);
+    }
+
+    /* ─── REVEAL ─── */
+    .reveal {
+      opacity: 0; transform: translateY(18px);
+      transition: opacity 0.65s ease, transform 0.65s ease;
+    }
+    .reveal.in { opacity: 1; transform: none; }
+
+    /* ─── KEYFRAMES ─── */
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(16px); }
+      to   { opacity:1; transform:none; }
+    }
+    @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 860px) {
+      .services-grid { grid-template-columns: 1fr; }
+      .service-card-wide { grid-column: span 1; }
+      .study-grid { grid-template-columns: 1fr; }
+      .study-right { display: none; }
+      .approach-steps { grid-template-columns: 1fr; }
+      .cta-inner { flex-direction: column; }
+      .nav-links a:not(.nav-cta) { display: none; }
+      .nav-center { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ╔═ NAV ═╗ -->
+<nav>
+  <a href="/" class="nav-logo">RHYSTIC<em>·</em>AI</a>
+  <div class="nav-center">
+    <div class="nav-status">
+      <span class="status-dot"></span>
+      AI CONSULTING — CUSTOM SOFTWARE
+    </div>
+  </div>
+  <div class="nav-links">
+    <a href="#services">SERVICES</a>
+    <a href="#study">STUDY</a>
+    <a href="#approach">APPROACH</a>
+    <a href="https://study.rhystic.ai" class="nav-cta">ENTER STUDY</a>
+  </div>
+</nav>
+
+<!-- ╔═ HERO ═╗ -->
+<section class="hero">
+  <div class="hero-glow"></div>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow">AI CONSULTING + CUSTOM SOFTWARE</div>
+
+    <h1 class="hero-wordmark">
+      RHYSTIC<span class="highlight">.</span>AI
+    </h1>
+
+    <div class="hero-domain">RHYSTIC · AI</div>
+
+    <div class="hero-rule"></div>
+
+    <p class="hero-desc">
+      We help organizations understand, adopt, and build with artificial intelligence.
+      From strategy and consulting to fully custom software — built around your domain, not off a shelf.
+    </p>
+
+    <div class="hero-btns">
+      <a href="#study" class="btn-a">EXPLORE STUDY</a>
+      <a href="#services" class="btn-b">OUR SERVICES</a>
+    </div>
+  </div>
+
+  <div class="hero-ticker">
+    <div class="ticker-track">
+      <span class="ticker-item"><b>▸</b>AI CONSULTING</span>
+      <span class="ticker-item"><b>▸</b>CUSTOM MODEL DEVELOPMENT</span>
+      <span class="ticker-item"><b>▸</b>INTELLIGENT AUTOMATION</span>
+      <span class="ticker-item"><b>▸</b>RHYSTIC STUDY // NOW LIVE</span>
+      <span class="ticker-item"><b>▸</b>STRATEGIC AI ADOPTION</span>
+      <span class="ticker-item"><b>▸</b>BESPOKE AGENT SYSTEMS</span>
+      <span class="ticker-item"><b>▸</b>AI CONSULTING</span>
+      <span class="ticker-item"><b>▸</b>CUSTOM MODEL DEVELOPMENT</span>
+      <span class="ticker-item"><b>▸</b>INTELLIGENT AUTOMATION</span>
+      <span class="ticker-item"><b>▸</b>RHYSTIC STUDY // NOW LIVE</span>
+      <span class="ticker-item"><b>▸</b>STRATEGIC AI ADOPTION</span>
+      <span class="ticker-item"><b>▸</b>BESPOKE AGENT SYSTEMS</span>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ╔═ SERVICES ═╗ -->
+<section id="services" style="background: var(--bg); padding: 8rem 3rem;">
+  <div class="what" style="padding:0; max-width:1100px; margin:0 auto;">
+    <div class="reveal">
+      <div class="section-label">// 01 — WHAT WE DO</div>
+      <h2 class="section-heading">AI CONSULTING<br/>& CUSTOM<br/>BUILDS</h2>
+    </div>
+
+    <div class="services-grid reveal">
+      <div class="service-card">
+        <div class="service-card-accent accent-orange"></div>
+        <div class="service-num">// 01</div>
+        <div class="service-title">AI STRATEGY & CONSULTING</div>
+        <p class="service-text">
+          We work alongside your team to map where AI can create real value — and where it can't. No hype, no generic playbooks. Just grounded advice on how to move from possibility to production.
+        </p>
+        <div class="service-corner">↗</div>
+      </div>
+
+      <div class="service-card">
+        <div class="service-card-accent accent-cyan"></div>
+        <div class="service-num">// 02</div>
+        <div class="service-title">CUSTOM MODEL DEVELOPMENT</div>
+        <p class="service-text">
+          We build AI models trained on your proprietary data, tuned to your specific domain. Not a wrapper around an existing product — a system that belongs to you.
+        </p>
+        <div class="service-corner">↗</div>
+      </div>
+
+      <div class="service-card service-card-wide">
+        <div class="service-card-accent accent-green"></div>
+        <div class="service-num">// 03</div>
+        <div class="service-title">CUSTOM AI AGENT SYSTEMS</div>
+        <p class="service-text">
+          Our core capability. We design and deploy intelligent agent systems that can reason, plan, and act — connected to your tools, your data, and your workflows. This is the same technology powering our own product, Rhystic Study.
+        </p>
+        <div class="service-corner">↗</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ╔═ STUDY ═╗ -->
+<section id="study" class="study-section">
+  <div class="study-grid">
+    <div class="study-left reveal">
+      <div class="study-pill">LIVE PRODUCT</div>
+      <h2 class="study-name">
+        <span class="s1">RHYSTIC</span>
+        <span class="s2">STUDY</span>
+      </h2>
+      <p class="study-tagline">
+        Our own application, built on the same custom agent system we use for clients. Study is an intelligent workspace that learns your domain, captures knowledge continuously, and surfaces what you need before you think to ask.
+      </p>
+      <ul class="study-features">
+        <li>Powered by Rhystic's proprietary agent</li>
+        <li>Learns from your domain over time</li>
+        <li>Knowledge capture across sessions</li>
+        <li>Private deployment — your data never leaves</li>
+        <li>Built for teams doing serious work</li>
+      </ul>
+      <a href="https://study.rhystic.ai" class="btn-a" style="align-self:flex-start;">LOGIN TO STUDY</a>
+    </div>
+
+    <div class="study-right">
+      <div class="terminal">
+        <div class="t-bar">
+          <div class="t-dot t-d1"></div>
+          <div class="t-dot t-d2"></div>
+          <div class="t-dot t-d3"></div>
+          <div class="t-label">STUDY // AGENT ACTIVE</div>
+        </div>
+        <div class="t-body">
+          <div class="t-row"><span class="p">runner@study ~ $</span> <span class="c">rhystic agent --init</span></div>
+          <div class="t-row"><span class="o">✓ Agent online</span></div>
+          <div class="t-row"><span class="o">✓ Domain context loaded</span></div>
+          <div class="t-row"><span class="d">→ Awaiting input...</span></div>
+          <div class="t-row"> </div>
+          <div class="t-row"><span class="p">runner@study ~ $</span> <span class="c">study query "what did we decide last week"</span></div>
+          <div class="t-row"><span class="o">✓ Retrieving session history</span></div>
+          <div class="t-row"><span class="o">✓ Cross-referencing knowledge graph</span></div>
+          <div class="t-row"><span class="o">✓ Synthesis complete</span></div>
+          <div class="t-row"><span class="d">→ 3 decisions surfaced</span></div>
+          <div class="t-row"> </div>
+          <div class="t-row"><span class="p">runner@study ~ $</span> <span class="t-cursor"></span></div>
+        </div>
+        <div class="t-footer">
+          <a href="https://study.rhystic.ai" class="t-access">
+            ACCESS STUDY PLATFORM
+            <span>study.rhystic.ai →</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ╔═ APPROACH ═╗ -->
+<section id="approach" style="background: var(--bg); padding: 8rem 3rem;">
+  <div class="approach" style="padding:0; max-width:1100px; margin:0 auto;">
+    <div class="reveal">
+      <div class="section-label">// 02 — HOW WE WORK</div>
+      <h2 class="section-heading">THE APPROACH</h2>
+    </div>
+
+    <div class="approach-steps reveal">
+      <div class="approach-step">
+        <div class="step-tag tag-orange">PHASE 01</div>
+        <div class="step-index">01</div>
+        <div class="step-title">UNDERSTAND</div>
+        <p class="step-text">We spend time in your domain before we write a line of code or make a recommendation. Real understanding before real advice.</p>
+      </div>
+      <div class="approach-step">
+        <div class="step-tag tag-cyan">PHASE 02</div>
+        <div class="step-index">02</div>
+        <div class="step-title">BUILD</div>
+        <p class="step-text">Custom systems, not templates. Whether it's a consulting engagement or a full software build, everything we make is specific to you.</p>
+      </div>
+      <div class="approach-step">
+        <div class="step-tag tag-green">PHASE 03</div>
+        <div class="step-index">03</div>
+        <div class="step-title">EVOLVE</div>
+        <p class="step-text">AI systems get better with use. We stay close — iterating, improving, and making sure what we built keeps delivering value over time.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ╔═ CTA ═╗ -->
+<section class="cta">
+  <div class="cta-inner">
+    <div>
+      <div class="cta-label">// LET'S TALK</div>
+      <h2 class="cta-heading">READY TO<br/>BUILD?</h2>
+    </div>
+    <div class="cta-btns">
+      <a href="mailto:hello@rhystic.ai" class="btn-dark">START A CONVERSATION →</a>
+      <a href="https://study.rhystic.ai" class="btn-outline-dark">OPEN STUDY →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ╔═ FOOTER ═╗ -->
+<footer>
+  <div class="footer-inner">
+    <a href="/" class="footer-logo">RHYSTIC<em>·</em>AI</a>
+    <div class="footer-links">
+      <a href="#services">Services</a>
+      <a href="#study">Study</a>
+      <a href="#approach">Approach</a>
+      <a href="mailto:hello@rhystic.ai">Contact</a>
+    </div>
+    <div class="footer-copy">© 2025 RHYSTIC.AI</div>
+  </div>
+</footer>
+
+<script>
+  const els = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver(entries => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('in'), i * 80);
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.08 });
+  els.forEach(el => io.observe(el));
+</script>
+</body>
+</html>
