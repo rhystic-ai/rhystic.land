@@ -922,14 +922,14 @@
           <div class="px-dot px-dot-1"></div>
           <div class="px-dot px-dot-2"></div>
           <div class="px-dot px-dot-3"></div>
-          <div class="px-term-label">RHYSTIC CORE — BOOT</div>
+          <div class="px-term-label">RHYSTIC STUDY — BOOT</div>
         </div>
         <div class="px-term-body">
 <div class="tl"><span class="p">runner@study:~$</span> <span class="c">rhystic agent --init</span></div>
-<div class="tl"><span class="g">  [OK]</span> <span class="d">Runtime initialized</span></div>
-<div class="tl"><span class="g">  [OK]</span> <span class="d">Domain context loaded</span></div>
-<div class="tl"><span class="g">  [OK]</span> <span class="d">Knowledge graph built</span></div>
-<div class="tl"><span class="o">  [→]</span> <span class="d">Agent ready</span></div>
+<div class="tl"><span class="g">  [OK]</span> <span class="d">MTG Rules Engine loaded</span></div>
+<div class="tl"><span class="g">  [OK]</span> <span class="d">Card database indexed (62,000+)</span></div>
+<div class="tl"><span class="g">  [OK]</span> <span class="d">Format contexts calibrated</span></div>
+<div class="tl"><span class="o">  [→]</span> <span class="d">Study ready — enter the arena</span></div>
         </div>
       </div>
 
@@ -939,14 +939,14 @@
           <div class="px-dot px-dot-1"></div>
           <div class="px-dot px-dot-2"></div>
           <div class="px-dot px-dot-3"></div>
-          <div class="px-term-label">STUDY — QUERY SESSION</div>
+          <div class="px-term-label">STUDY — DECK ANALYSIS</div>
         </div>
         <div class="px-term-body">
-<div class="tl"><span class="p">runner@study:~$</span> <span class="c">study query "what did we decide last week"</span></div>
-<div class="tl"><span class="g">  [OK]</span> <span class="d">Scanning session history</span></div>
-<div class="tl"><span class="g">  [OK]</span> <span class="d">Cross-referencing knowledge graph</span></div>
-<div class="tl"><span class="g">  [OK]</span> <span class="d">Synthesis complete</span></div>
-<div class="tl"><span class="o">  [→]</span> <span class="d">3 decisions surfaced  confidence: 96%</span></div>
+<div class="tl"><span class="p">runner@study:~$</span> <span class="c">study analyze --deck "grixis midrange"</span></div>
+<div class="tl"><span class="g">  [OK]</span> <span class="d">Loading decklist...</span></div>
+<div class="tl"><span class="g">  [OK]</span> <span class="d">Analyzing mana curve & synergies</span></div>
+<div class="tl"><span class="g">  [OK]</span> <span class="d">Matchup spread calculated</span></div>
+<div class="tl"><span class="o">  [→]</span> <span class="d">Trough: 62% vs field — rec: add 2x grief</span></div>
         </div>
       </div>
 
@@ -956,12 +956,12 @@
           <div class="px-dot px-dot-1"></div>
           <div class="px-dot px-dot-2"></div>
           <div class="px-dot px-dot-3"></div>
-          <div class="px-term-label">STUDY — ACCESS</div>
+          <div class="px-term-label">STUDY — SPELLBOOK</div>
         </div>
         <div class="px-term-body">
-<div class="tl"><span class="p">runner@study:~$</span> <span class="c">study --open</span></div>
-<div class="tl"><span class="g">  [OK]</span> <span class="d">Connecting to study.rhystic.ai</span></div>
-<div class="tl"><span class="o">  [→]</span> <span class="d">Authenticating runner...</span></div>
+<div class="tl"><span class="p">runner@study:~$</span> <span class="c">study spellbook --open</span></div>
+<div class="tl"><span class="g">  [OK]</span> <span class="d">Loading card knowledge base...</span></div>
+<div class="tl"><span class="o">  [→]</span> <span class="d">52,847 cards indexed — searching...</span></div>
 <div class="tl"><span class="p">runner@study:~$</span> <span class="cursor"></span></div>
         </div>
         <div style="padding: 0 12px 12px;">
@@ -1256,6 +1256,7 @@ reveals.forEach(el => io.observe(el));
 </script>
 </body>
 </html>
+
 
 
 
