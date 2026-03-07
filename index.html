@@ -351,13 +351,13 @@
 
     .tl {
       font-family: var(--font-mono);
-      font-size: 1.1rem; line-height: 1.9;
+      font-size: 1.4rem; line-height: 2;
     }
     .tl .p  { color: var(--violet); }
     .tl .c  { color: var(--white); }
     .tl .o  { color: var(--pink); }
     .tl .g  { color: #7dffb3; }
-    .tl .d  { color: var(--dimmer); }
+    .tl .d  { color: var(--white); }
     .tl .b  { color: var(--pink); font-weight: 700; }
     .tl .h  { color: var(--violet); }
     .tl .addr { color: var(--navy); background: rgba(14,33,160,0.4); padding: 0 4px; font-size: 0.6rem; }
@@ -840,13 +840,13 @@
     }
     .team-name {
       font-family: var(--font-display);
-      font-size: 1.1rem;
+      font-size: 1.5rem;
       font-weight: 700;
       color: var(--white);
       margin-bottom: 0.25rem;
     }
     .team-title {
-      font-size: 0.72rem;
+      font-size: 1rem;
       letter-spacing: 0.12em;
       color: var(--dim);
       text-transform: uppercase;
@@ -1076,7 +1076,7 @@
 <div class="px-border-top" style="background: repeating-linear-gradient(90deg, var(--violet) 0, var(--violet) 8px, var(--pink) 8px, var(--pink) 16px, transparent 16px, transparent 24px);"></div>
 <section id="team" style="background: var(--bg);">
 
-  <div class="section-wrap" style="padding: 7rem 3rem 0;">
+  <div class="section-wrap" style="padding: 7rem 0 0; max-width: 100%;">
     <div class="reveal">
       <div style="font-size:0.58rem; letter-spacing:0.35em; color:var(--pink); margin-bottom:0.6rem;">// THE SQUAD</div>
       <h2 style="font-family:var(--font-display); font-size:clamp(2.2rem,4.5vw,3.8rem); font-weight:700; letter-spacing:-0.02em; line-height:1; color:var(--white); text-shadow:3px 3px 0 var(--navy); margin-bottom:1rem;">MEET THE<br/>TEAM</h2>
@@ -1102,7 +1102,7 @@
       </div>
       <div class="team-info">
         <div class="team-pronouns" style="color:var(--pink); font-size:0.48rem; letter-spacing:0.2em;">she/her</div>
-        <div class="team-name">Sarah Chen</div>
+        <div class="team-name">sarah.chen</div>
         <div class="team-title">Lead AI Architect</div>
         <div class="team-streak">
           <span class="streak-num">847</span>
@@ -1128,7 +1128,7 @@
       </div>
       <div class="team-info">
         <div class="team-pronouns" style="color:var(--navy); font-size:0.48rem; letter-spacing:0.2em;">he/him</div>
-        <div class="team-name">Marcus Johnson</div>
+        <div class="team-name">marcus.johnson</div>
         <div class="team-title">Senior ML Engineer</div>
         <div class="team-streak">
           <span class="streak-num">1,203</span>
@@ -1154,7 +1154,7 @@
       </div>
       <div class="team-info">
         <div class="team-pronouns" style="color:var(--pink); font-size:0.48rem; letter-spacing:0.2em;">she/her</div>
-        <div class="team-name">Priya Patel</div>
+        <div class="team-name">priya.patel</div>
         <div class="team-title">Full Stack Developer</div>
         <div class="team-streak">
           <span class="streak-num">512</span>
@@ -1180,7 +1180,7 @@
       </div>
       <div class="team-info">
         <div class="team-pronouns" style="color:var(--violet); font-size:0.48rem; letter-spacing:0.2em;">they/them</div>
-        <div class="team-name">Alex Rivera</div>
+        <div class="team-name">alex.rivera</div>
         <div class="team-title">DevOps Engineer</div>
         <div class="team-streak">
           <span class="streak-num">789</span>
@@ -1206,7 +1206,7 @@
       </div>
       <div class="team-info">
         <div class="team-pronouns" style="color:var(--pink); font-size:0.48rem; letter-spacing:0.2em;">she/her</div>
-        <div class="team-name">Jessica Kim</div>
+        <div class="team-name">jessica.kim</div>
         <div class="team-title">Prompt Engineer</div>
         <div class="team-streak">
           <span class="streak-num">634</span>
@@ -1232,7 +1232,7 @@
       </div>
       <div class="team-info">
         <div class="team-pronouns" style="color:var(--navy); font-size:0.48rem; letter-spacing:0.2em;">he/him</div>
-        <div class="team-name">David Okonkwo</div>
+        <div class="team-name">david.okonkwo</div>
         <div class="team-title">Backend Specialist</div>
         <div class="team-streak">
           <span class="streak-num">956</span>
@@ -1253,8 +1253,7 @@
       </div>
       <div class="proto-col" style="border-left: 4px solid var(--navy);">
         <div class="tl" style="margin-bottom:8px;"><span style="color:var(--dimmer); font-size:0.6rem;">// DIVERSITY MATTERS</span></div>
-<div class="tl"><span class="g">  [OK]</span> <span class="d">women identifying: 3</span></div>
-<div class="tl"><span class="g">  [OK]</span> <span class="d">non-binary: 1</span></div>
+<div class="tl"><span class="g">  [OK]</span> <span class="d">disk storage: 2TB</span></div>
 <div class="tl"><span class="o">  [→]</span> <span class="d">we're building for everyone</span></div>
       </div>
       <div class="proto-col" style="border-left: 4px solid var(--navy);">
@@ -1475,6 +1474,17 @@ reveals.forEach(el => io.observe(el));
 </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
 
 
 
